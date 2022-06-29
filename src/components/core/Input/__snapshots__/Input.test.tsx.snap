@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input matches snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <input
+      class="p-2 rounded w-full h-8 text-sm border"
+      type="text"
+    />
+  </div>
+</DocumentFragment>
+`;

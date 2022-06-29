@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormikInput matches snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      <label
+        class="flex items-center gap-x-1 font-semibold text-gray-700 text-sm "
+      >
+        test
+      </label>
+      <input
+        class="p-2 rounded w-full h-8 text-sm border"
+        type="text"
+        value=""
+        width="100%"
+      />
+    </div>
+    <div
+      class="text-sm text-red-500 pt-1 pl-1"
+    />
+  </div>
+</DocumentFragment>
+`;
