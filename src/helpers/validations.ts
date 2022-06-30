@@ -3,7 +3,11 @@ const validationMessages = {
   required: 'Campo obrigatório',
 };
 
-export const validationMessage = (type: keyof typeof validationMessages) =>
+export const getValidation = (type: keyof typeof validationMessages) =>
   validationMessages[type];
 
-export const temp = {};
+const hints = {
+  required: 'Obrigatório',
+};
+
+export const getHint = (type: keyof typeof hints) => hints[type];

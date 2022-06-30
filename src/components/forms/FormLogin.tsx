@@ -13,7 +13,7 @@ import tryCatch from '@/helpers/tryCatch';
 import Text from '@/components/core/Text';
 import FormikInput from '@/components/forms/FormikInput';
 import Button from '@/components/core/Button';
-import { validationMessage } from '@/helpers/validations';
+import { getValidation } from '@/helpers/validations';
 
 interface Props {
   title?: string;
@@ -26,8 +26,8 @@ const FormLogin = ({ title }: Props) => {
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email(validationMessage('email'))
-      .required(validationMessage('required')),
+      .email(getValidation('email'))
+      .required(getValidation('required')),
   });
 
   const handleSubmit = async ({ email }: typeof initialValues) => {
