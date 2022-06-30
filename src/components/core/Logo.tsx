@@ -1,8 +1,9 @@
+import { getRoute } from '@/helpers/routes';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const Logo = () => (
-  <Link href="/">
+  <Link href={getRoute('home')}>
     <a className="flex items-center gap-x-2 text-2xl text-blue-600 font-medium font-['Nunito']">
       <span className="sr-only">Home</span>
       <div className="-rotate-12 flex items-center">

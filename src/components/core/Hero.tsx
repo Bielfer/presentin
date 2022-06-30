@@ -1,11 +1,12 @@
 import ButtonLink from '@/components/core/ButtonLink';
 import Container from '@/components/core/Container';
+import { getRoute } from '@/helpers/routes';
 import { GiftIcon } from '@heroicons/react/solid';
 
 const Hero = () => (
   <Container className="pt-20 pb-16 text-center lg:pt-32">
     <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
-      Presentear seus amigos nunca foi{' '}
+      Dar presentes em grupo nunca foi{' '}
       <span className="relative whitespace-nowrap text-blue-600">
         <svg
           aria-hidden="true"
@@ -19,11 +20,15 @@ const Hero = () => (
       </span>
     </h1>
     <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700">
-      Dar presentes em grupo nunca é uma tarefa fácil. Porém, com um Presentin
-      você consegue lembrar seus amigos de todas as suas memórias juntos.
+      Seja para comemorar um aniversário, um chá de bebê ou até mesmo se
+      despedir de um amigo, um Presentin sempre vai ser uma boa opção.
     </p>
     <div className="mt-10 flex justify-center space-x-6">
-      <ButtonLink href="/" variant="primary" iconLeft={GiftIcon}>
+      <ButtonLink
+        href={getRoute('createPresentin')}
+        variant="primary"
+        iconLeft={GiftIcon}
+      >
         Crie o seu Presentin
       </ButtonLink>
     </div>
