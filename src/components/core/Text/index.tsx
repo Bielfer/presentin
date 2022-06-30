@@ -1,5 +1,6 @@
-import React, { FC, HTMLAttributes, ReactElement } from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 import { VariantText } from '@/types/styles';
+import clsx from 'clsx';
 
 interface Props extends HTMLAttributes<any> {
   className?: string;
@@ -18,20 +19,20 @@ interface Props extends HTMLAttributes<any> {
   em?: boolean;
   blockquote?: boolean;
   label?: boolean;
-  iconLeft?: ReactElement;
-  iconRight?: ReactElement;
+  iconLeft?: React.ComponentType<React.ComponentProps<'svg'>>;
+  iconRight?: React.ComponentType<React.ComponentProps<'svg'>>;
   htmlFor?: string;
 }
 
 const elementStyles = {
-  h1: '',
-  h2: 'text-3xl font-bold',
-  h3: 'text-2xl font-bold',
-  h4: 'text-xl font-bold',
-  h5: 'text-lg font-bold',
-  h6: 'font-bold',
+  h1: 'text-3xl font-medium text-slate-900',
+  h2: 'text-2xl font-medium text-slate-900',
+  h3: 'text-xl font-medium text-slate-900',
+  h4: 'text-lg font-medium text-slate-900',
+  h5: 'text-base font-medium text-slate-900',
+  h6: 'text-sm font-medium text-slate-900',
   p: '',
-  b: '',
+  b: 'font-semibold text-slate-900',
   small: '',
   i: '',
   span: '',
@@ -59,8 +60,8 @@ const Text: FC<Props> = ({
   em,
   blockquote,
   label,
-  iconLeft,
-  iconRight,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
   ...props
 }) => {
   const elements = {
@@ -81,21 +82,25 @@ const Text: FC<Props> = ({
     label,
   };
   const elementArray = Object.keys(elements) as VariantText[];
-  const element = elementArray.find((el) => elements[el] === true) || 'p';
+  const element = elementArray.find((el) => elements[el] === true) ?? 'p';
 
   return (
     <>
       {React.createElement(
         element,
         {
-          className: `flex items-center gap-x-1 ${elementStyles[element]} ${
-            className ?? ''
-          }`,
+          className: clsx(
+            'flex items-center',
+            elementStyles[element],
+            className
+          ),
           ...props,
         },
-        iconLeft,
+        IconLeft && <IconLeft className="-ml-0.5 mr-2 h-5 w-5 flex-shrink-0" />,
         children,
-        iconRight
+        IconRight && (
+          <IconRight className="ml-2 -mr-0.5 h-5 w-5 flex-shrink-0" />
+        )
       )}
     </>
   );
