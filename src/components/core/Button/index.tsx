@@ -53,9 +53,19 @@ const Button = ({
     )}
     {...props}
   >
-    {IconLeft && <IconLeft className="-ml-0.5 mr-2 h-5 w-5 flex-shrink-0" />}
-    {loading ? <Spinner size="sm" color="white" /> : children}
-    {IconRight && <IconRight className="ml-2 -mr-0.5 h-5 w-5 flex-shrink-0" />}
+    {loading ? (
+      <Spinner size="sm" color="white" />
+    ) : (
+      <>
+        {IconLeft && (
+          <IconLeft className="-ml-0.5 mr-2 h-5 w-5 flex-shrink-0" />
+        )}
+        {children}
+        {IconRight && (
+          <IconRight className="ml-2 -mr-0.5 h-5 w-5 flex-shrink-0" />
+        )}
+      </>
+    )}
   </button>
 );
 

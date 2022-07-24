@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Size, sizes, variantStyles } from './Button';
-import { Props } from './MyLink';
+import { Size, sizes, variantStyles } from '@/components/core/Button';
+import { Props } from '@/components/core/MyLink';
 
 interface ButtonProps extends Props {
   size?: Size;

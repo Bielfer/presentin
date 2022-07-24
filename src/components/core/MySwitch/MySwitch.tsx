@@ -1,6 +1,6 @@
 import { Switch } from '@headlessui/react';
 import clsx from 'clsx';
-import Text from './Text';
+import Text from '@/components/core/Text';
 
 interface Props {
   checked: boolean;
