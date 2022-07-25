@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 
 interface Props {
@@ -12,9 +13,12 @@ const Card = ({ children, hoverable, shadow, className }: Props) => {
   const shadowStyles = shadow ? ' shadow-lg hover:shadow-xl' : '';
   return (
     <div
-      className={`border rounded p-4 transition duration-300${hoverableStyles}${shadowStyles}${
-        ` ${className}` ?? ''
-      }`}
+      className={clsx(
+        'border rounded-lg transition duration-300',
+        hoverableStyles,
+        shadowStyles,
+        className
+      )}
     >
       {children}
     </div>
