@@ -1,5 +1,6 @@
 import Text from '@/components/core/Text';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   className?: string;
   name?: string;
   children: ReactNode;
+  shadow?: boolean;
 }
 
 const InputLayout = ({
@@ -18,6 +20,7 @@ const InputLayout = ({
   className,
   name,
   children,
+  shadow,
 }: Props) => (
   <div className={className}>
     {label && (
@@ -32,7 +35,7 @@ const InputLayout = ({
         )}
       </div>
     )}
-    <div className="mt-1 relative rounded-md shadow-sm">
+    <div className={clsx('mt-1 relative rounded-md', shadow && 'shadow-sm')}>
       {children}
       {!!error && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
