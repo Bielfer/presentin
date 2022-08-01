@@ -25,6 +25,7 @@ const Input: FC<Props> = ({
     error={error}
     hint={hint}
     label={label}
+    shadow
   >
     <input
       className={

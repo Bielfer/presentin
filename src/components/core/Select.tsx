@@ -32,6 +32,7 @@ const Select = ({
     error={error}
     hint={hint}
     label={label}
+    shadow
   >
     <Listbox value={selected} onChange={setSelected}>
       <div className="relative mt-1">
