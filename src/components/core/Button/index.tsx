@@ -6,7 +6,7 @@ export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type Variant = 'primary' | 'secondary' | 'white';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type?: 'submit' | 'button';
   iconLeft?: React.ComponentType<React.ComponentProps<'svg'>>;
   iconRight?: React.ComponentType<React.ComponentProps<'svg'>>;
@@ -42,7 +42,7 @@ const Button = ({
   size = 'md',
   loading,
   ...props
-}: Props) => (
+}: ButtonProps) => (
   <button
     type={type === 'submit' ? 'submit' : 'button'}
     className={clsx(
