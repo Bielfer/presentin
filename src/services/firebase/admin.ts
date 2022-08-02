@@ -14,7 +14,10 @@ if (!admin.apps.length) {
 }
 
 const adminFirestore = admin.firestore();
-
 const adminAuth = admin.auth();
 
-export { adminAuth, adminFirestore, admin };
+const getServerTimestamp = () => admin.firestore.FieldValue.serverTimestamp();
+
+const getIdToken = (idToken: string) => adminAuth.verifyIdToken(idToken);
+
+export { adminAuth, adminFirestore, admin, getServerTimestamp, getIdToken };

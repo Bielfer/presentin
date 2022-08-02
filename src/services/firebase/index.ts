@@ -11,15 +11,11 @@ const credentials = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-initializeApp(credentials);
+const app = initializeApp(credentials);
 
-// AUTHENTICATION
+const auth = getAuth(app);
+const storage = getStorage(app);
 
-const auth = getAuth();
 auth.useDeviceLanguage();
-
-// STORAGE
-
-const storage = getStorage();
 
 export { auth, storage };
