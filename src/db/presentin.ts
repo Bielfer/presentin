@@ -2,7 +2,11 @@ import { adminFirestore, getServerTimestamp } from '@/services/firebase/admin';
 import { Presentin } from '@/types/presentin';
 
 export const addPresentin = (data: Presentin) =>
-  adminFirestore.collection('presentin').add(data);
+  adminFirestore.collection('presentin').add({
+    ...data,
+    createdAt: getServerTimestamp(),
+    updatedAt: getServerTimestamp(),
+  });
 
 export const getPresentinById = (id: string) =>
   adminFirestore.collection('presentin').doc(id).get();
