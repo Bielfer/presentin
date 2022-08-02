@@ -4,7 +4,6 @@ import { Presentin } from '@/types/presentin';
 export const addPresentin = (data: Presentin) =>
   adminFirestore.collection('presentin').add({
     ...data,
-    createdAt: getServerTimestamp(),
     updatedAt: getServerTimestamp(),
   });
 
