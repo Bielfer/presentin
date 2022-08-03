@@ -1,11 +1,12 @@
 import { getPresentinById, updatePresentinById } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
-import { getIdToken } from '@/services/firebase/admin';
+import { getIdTokenData } from '@/services/firebase/admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const route = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { query } = req;
-  const { presentinId } = query;
+  const { body } = req;
+  const { presentinId } = req.query;
+  const { authorization } = req.headers;
 
   switch (req.method) {
     case 'GET': {
@@ -14,7 +15,7 @@ const route = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       if (error) {
-        res.status(404).json({ message: 'Presentin not found' });
+        res.status(404).json({ message: 'Presentin not found', error });
         break;
       }
 
@@ -23,7 +24,7 @@ const route = async (req: NextApiRequest, res: NextApiResponse) => {
         ...presentinData,
         id: doc?.id,
         updatedAt: presentinData?.updatedAt.toDate(),
-        createdAt: presentinData?.createdAt.toDate(),
+        createdAt: doc?.createTime?.toDate(),
       };
 
       res.status(200).json({ message: 'Presentin found', data: presentin });
@@ -31,13 +32,15 @@ const route = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case 'PATCH': {
-      const { body } = req;
-
-      const [token, errorUnauthorized] = await tryCatch(getIdToken('cu'));
+      const [token, errorUnauthorized] = await tryCatch(
+        getIdTokenData(authorization as string)
+      );
       const uid = token?.uid;
 
       if (errorUnauthorized) {
-        res.status(401).json({ message: 'You are not logged in' });
+        res
+          .status(401)
+          .json({ message: 'You are not logged in', error: errorUnauthorized });
         break;
       }
 
