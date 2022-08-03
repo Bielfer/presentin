@@ -18,6 +18,7 @@ const adminAuth = admin.auth();
 
 const getServerTimestamp = () => admin.firestore.FieldValue.serverTimestamp();
 
-const getIdToken = (idToken: string) => adminAuth.verifyIdToken(idToken);
+const getIdTokenData = (idToken: string) =>
+  adminAuth.verifyIdToken(idToken.split(' ')[1]);
 
-export { adminAuth, adminFirestore, admin, getServerTimestamp, getIdToken };
+export { adminAuth, adminFirestore, admin, getServerTimestamp, getIdTokenData };
