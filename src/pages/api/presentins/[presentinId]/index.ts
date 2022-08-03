@@ -1,7 +1,9 @@
 import { getPresentinById, updatePresentinById } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
+import validateBody from '@/helpers/validateBody';
 import { getIdTokenData } from '@/services/firebase/admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { z } from 'zod';
 
 const route = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req;
@@ -32,18 +34,29 @@ const route = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case 'PATCH': {
+      const bodySchema = z
+        .object({
+          recipientName: z.string().optional(),
+          title: z.string().optional(),
+          groupName: z.string().optional(),
+        })
+        .strict();
+
+      if (!validateBody(res, bodySchema, body)) break;
+
       const [token, errorUnauthorized] = await tryCatch(
-        getIdTokenData(authorization as string)
+        getIdTokenData(authorization ?? '')
       );
-      const uid = token?.uid;
 
       if (errorUnauthorized) {
-        res
-          .status(401)
-          .json({ message: 'You are not logged in', error: errorUnauthorized });
+        res.status(401).json({
+          message: 'You do not have permission to access presentin',
+          error: errorUnauthorized,
+        });
         break;
       }
 
+      const uid = token?.uid;
       const [, error] = await tryCatch(
         updatePresentinById(presentinId as string, uid ?? '', body)
       );
