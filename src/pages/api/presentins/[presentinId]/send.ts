@@ -1,3 +1,4 @@
+/* eslint no-console:off */
 import { updatePresentinById } from '@/db/presentin';
 import { isAuthenticated, requestTimer } from '@/helpers/middlewares';
 import tryCatch from '@/helpers/tryCatch';
@@ -29,6 +30,10 @@ router.use(isAuthenticated).post(async (req, res) => {
 });
 
 export default router.handler({
+  onError: (err, req, res) => {
+    console.error(err);
+    res.status(500).end('Server error!');
+  },
   onNoMatch: (req, res) => {
     res.status(405).json({ message: 'Invalid Request Method' });
   },
