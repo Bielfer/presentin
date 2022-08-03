@@ -4,17 +4,17 @@ import clsx from 'clsx';
 import Logo from '@/components/core/Logo';
 import ButtonLink from '@/components/core/ButtonLink';
 import Container from '@/components/core/Container';
-import { getRoute } from '@/helpers/routes';
+import paths from '@/constants/paths';
 import MyLink from './MyLink';
 
 const links = [
   {
     text: 'Como Funciona?',
-    route: getRoute('features'),
+    route: paths.features,
   },
   {
     text: 'Preços',
-    route: getRoute('pricing'),
+    route: paths.pricing,
   },
 ];
 

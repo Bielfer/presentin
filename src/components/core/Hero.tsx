@@ -1,6 +1,6 @@
 import ButtonLink from '@/components/core/ButtonLink';
 import Container from '@/components/core/Container';
-import { getRoute } from '@/helpers/routes';
+import paths from '@/constants/paths';
 import { GiftIcon } from '@heroicons/react/solid';
 
 const Hero = () => (
@@ -25,7 +25,7 @@ const Hero = () => (
     </p>
     <div className="mt-10 flex justify-center space-x-6">
       <ButtonLink
-        href={getRoute('createPresentin')}
+        href={paths.createPresentin}
         variant="primary"
         iconLeft={GiftIcon}
       >
