@@ -1,5 +1,6 @@
+import hints from '@/constants/hints';
+import validations from '@/constants/validations';
 import { useAuth } from '@/contexts/auth';
-import { getHint, getValidation } from '@/helpers/validations';
 import { CameraIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { Form, Formik } from 'formik';
@@ -27,14 +28,14 @@ const FormPresentinMessage = ({ className }: Props) => {
   };
 
   const validationSchema = Yup.object({
-    senderName: Yup.string().required(getValidation('required')),
+    senderName: Yup.string().required(validations.required),
     message: Yup.string(),
     donateCash: Yup.bool(),
     cashAmount: Yup.number().when('donateCash', {
       is: true,
       then: Yup.number()
-        .min(1, getValidation('valueGreaterThanZero'))
-        .required(getValidation('required')),
+        .min(1, validations.valueGreaterThanZero)
+        .required(validations.required),
     }),
   });
 
@@ -54,7 +55,7 @@ const FormPresentinMessage = ({ className }: Props) => {
           <FormikInput
             name="senderName"
             label="Seu Nome"
-            hint={getHint('required')}
+            hint={hints.required}
             placeholder="Ex: Maria"
           />
           <FormikTextarea
@@ -79,7 +80,7 @@ const FormPresentinMessage = ({ className }: Props) => {
             <FormikNumber
               name="cashAmount"
               label="Digite o valor"
-              hint={getHint('required')}
+              hint={hints.required}
               format="currency"
             />
           )}

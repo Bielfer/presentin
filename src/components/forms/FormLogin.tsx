@@ -4,7 +4,7 @@ import Card from '@/components/core/Card';
 import Text from '@/components/core/Text';
 import FormikInput from '@/components/forms/FormikInput';
 import Button from '@/components/core/Button';
-import { getValidation } from '@/helpers/validations';
+import validations from '@/constants/validations';
 
 interface Props {
   title?: string;
@@ -16,9 +16,7 @@ const FormLogin = ({ title }: Props) => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(getValidation('email'))
-      .required(getValidation('required')),
+    email: Yup.string().email(validations.email).required(validations.required),
   });
 
   const handleSubmit = async ({ email }: typeof initialValues) => {

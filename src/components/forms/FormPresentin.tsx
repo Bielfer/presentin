@@ -1,4 +1,5 @@
-import { getHint, getValidation } from '@/helpers/validations';
+import hints from '@/constants/hints';
+import validations from '@/constants/validations';
 import { Presentin } from '@/types/presentin';
 import clsx from 'clsx';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -32,17 +33,17 @@ const FormPresentin = ({ className, presentin }: Props) => {
   };
 
   const validationSchema = Yup.object({
-    recipientName: Yup.string().required(getValidation('required')),
-    title: Yup.string().required(getValidation('required')),
+    recipientName: Yup.string().required(validations.required),
+    title: Yup.string().required(validations.required),
     collectCash: Yup.boolean(),
-    groupName: Yup.string().required(getValidation('required')),
+    groupName: Yup.string().required(validations.required),
     senderName: Yup.string().when('loggedIn', {
       is: false,
-      then: Yup.string().required(getValidation('required')),
+      then: Yup.string().required(validations.required),
     }),
     senderEmail: Yup.string().when('loggedIn', {
       is: false,
-      then: Yup.string().required(getValidation('required')),
+      then: Yup.string().required(validations.required),
     }),
   });
 
@@ -57,13 +58,13 @@ const FormPresentin = ({ className, presentin }: Props) => {
           <FormikInput
             name="recipientName"
             label="Como se chama o recebedor?"
-            hint={getHint('required')}
+            hint={hints.required}
             placeholder="Ex: João Silva"
           />
           <FormikInput
             name="title"
             label="Título do Presentin"
-            hint={getHint('required')}
+            hint={hints.required}
             placeholder="Ex: Feliz aniversário João"
           />
           {!isPresentinCreated && (
@@ -76,7 +77,7 @@ const FormPresentin = ({ className, presentin }: Props) => {
           <FormikInput
             name="groupName"
             label="Nome do grupo que está enviando"
-            hint={getHint('required')}
+            hint={hints.required}
             placeholder="Ex: Seus queridos amigos de escola"
           />
           {!values.loggedIn ? (
@@ -84,14 +85,14 @@ const FormPresentin = ({ className, presentin }: Props) => {
               <FormikInput
                 name="senderName"
                 label="Seu Nome"
-                hint={getHint('required')}
+                hint={hints.required}
                 placeholder="Ex: José"
               />
               <FormikInput
                 name="senderEmail"
                 label="Seu Email"
                 placeholder="Ex: jose@gmail.com"
-                hint={getHint('required')}
+                hint={hints.required}
               />
             </>
           ) : null}
