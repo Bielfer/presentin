@@ -82,7 +82,7 @@ const MobileNavigation = () => (
                 </li>
               ))}
               <li className="border-t border-slate-300/40 pt-4">
-                <MyLink href="/login" className="block w-full">
+                <MyLink href={paths.login} className="block w-full">
                   Fazer Login
                 </MyLink>
               </li>
@@ -111,7 +111,7 @@ const Header = () => (
           ))}
 
           <li className="ml-auto hidden md:block">
-            <ButtonLink href="/login" variant="secondary">
+            <ButtonLink href={paths.login} variant="secondary">
               Fazer Login
             </ButtonLink>
           </li>

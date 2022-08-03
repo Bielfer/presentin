@@ -8,6 +8,7 @@ import MyImage from '@/components/core/MyImage';
 import Text from '@/components/core/Text';
 import PresentinContributors from '@/components/features/PresentinContributors';
 import FormPresentin from '@/components/forms/FormPresentin';
+import paths from '@/constants/paths';
 import useDogs from '@/data/useDogs';
 import {
   EyeIcon,
@@ -87,7 +88,7 @@ const PresentinById: NextPage = () => {
         </div>
         <div className="columns-1 sm:columns-2 md:columns-3 xl:columns-4">
           <ButtonLink
-            href={`${router.asPath}/message`}
+            href={paths.presentinMessage(router.asPath)}
             iconRight={PlusCircleIcon}
             className="w-full justify-center"
             variant="primary"

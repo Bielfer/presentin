@@ -1,9 +1,12 @@
+import paths from '@/constants/paths';
 import { render, screen } from '@testing-library/react';
 import ButtonLink from '.';
 
 describe('ButtonLink', () => {
   it('matches snapshot', () => {
-    const { asFragment } = render(<ButtonLink href="/">Test</ButtonLink>);
+    const { asFragment } = render(
+      <ButtonLink href={paths.home}>Test</ButtonLink>
+    );
 
     expect(asFragment()).toMatchSnapshot();
   });
