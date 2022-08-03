@@ -12,7 +12,7 @@ export interface Presentin {
 
 export enum PresentinStatus {
   Open = 'OPEN',
-  Closed = 'CLOSED',
+  Sent = 'SENT',
 }
 
 export interface PresentinMessage {
