@@ -20,7 +20,7 @@ exports[`InputLayout should match snapshot 1`] = `
       </span>
     </div>
     <div
-      class="mt-1 relative rounded-md shadow-sm"
+      class="mt-1 relative rounded-md"
     >
       Just a simple text
       <div
