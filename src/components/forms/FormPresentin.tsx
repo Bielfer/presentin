@@ -10,7 +10,7 @@ import FormikSwitch from './FormikSwitch';
 
 interface Props {
   className?: string;
-  presentin?: Presentin;
+  presentin?: Partial<Presentin>;
 }
 
 const FormPresentin = ({ className, presentin }: Props) => {
