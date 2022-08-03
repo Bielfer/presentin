@@ -13,7 +13,7 @@ export const getPresentinById = (id: string) =>
 export const updatePresentinById = (
   id: string,
   uid: string,
-  data: Presentin
+  data: Partial<Presentin>
 ) => {
   const presentinRef = adminFirestore.collection('presentins').doc(id);
 
