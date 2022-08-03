@@ -38,3 +38,25 @@ export const requestTimer = async (
   const end = Date.now();
   console.log(`${req.url} took ${end - start}ms`);
 };
+
+export const validateBody =
+  (schema: any) =>
+  async (
+    req: NextApiRequestExtended,
+    res: NextApiResponse,
+    next: NextHandler
+  ) => {
+    const { body } = req;
+    const bodyValidation = schema.safeParse(body);
+
+    if (!bodyValidation.success) {
+      res.status(400).json({
+        message: 'Invalid body',
+        error: bodyValidation.error.format(),
+      });
+
+      return;
+    }
+
+    await next();
+  };
