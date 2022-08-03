@@ -1,80 +1,75 @@
+/* eslint no-console:off */
 import { getPresentinById, updatePresentinById } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
-import validateBody from '@/helpers/validateBody';
-import { getIdTokenData } from '@/services/firebase/admin';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import { z } from 'zod';
+import {
+  isAuthenticated,
+  requestTimer,
+  validateBody,
+} from '@/helpers/middlewares';
+import { NextApiRequestExtended } from '@/types/api';
+import { createRouter } from 'next-connect';
 
-const route = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { body } = req;
+const router = createRouter<NextApiRequestExtended, NextApiResponse>().use(
+  requestTimer
+);
+
+router.get(async (req, res) => {
   const { presentinId } = req.query;
-  const { authorization } = req.headers;
 
-  switch (req.method) {
-    case 'GET': {
-      const [doc, error] = await tryCatch(
-        getPresentinById(presentinId as string)
-      );
+  const [doc, error] = await tryCatch(getPresentinById(presentinId as string));
 
-      if (error) {
-        res.status(404).json({ message: 'Presentin not found', error });
-        break;
-      }
-
-      const presentinData = doc?.data();
-      const presentin = {
-        ...presentinData,
-        id: doc?.id,
-        updatedAt: presentinData?.updatedAt.toDate(),
-        createdAt: doc?.createTime?.toDate(),
-      };
-
-      res.status(200).json({ message: 'Presentin found', data: presentin });
-      break;
-    }
-
-    case 'PATCH': {
-      const bodySchema = z
-        .object({
-          recipientName: z.string().optional(),
-          title: z.string().optional(),
-          groupName: z.string().optional(),
-        })
-        .strict();
-
-      if (!validateBody(res, bodySchema, body)) break;
-
-      const [token, errorUnauthorized] = await tryCatch(
-        getIdTokenData(authorization ?? '')
-      );
-
-      if (errorUnauthorized) {
-        res.status(401).json({
-          message: 'You do not have permission to access presentin',
-          error: errorUnauthorized,
-        });
-        break;
-      }
-
-      const uid = token?.uid;
-      const [, error] = await tryCatch(
-        updatePresentinById(presentinId as string, uid ?? '', body)
-      );
-
-      if (error) {
-        res.status(400).json({ message: 'Failed to update Presentin', error });
-        break;
-      }
-
-      res.status(200).json({ message: 'Presentin updated' });
-      break;
-    }
-
-    default: {
-      res.status(405).json({ error: 'Invalid Request Method' });
-      break;
-    }
+  if (error) {
+    res.status(404).json({ message: 'Presentin not found', error });
+    return;
   }
-};
 
-export default route;
+  const presentinData = doc?.data();
+  const presentin = {
+    ...presentinData,
+    id: doc?.id,
+    updatedAt: presentinData?.updatedAt.toDate(),
+    createdAt: doc?.createTime?.toDate(),
+  };
+
+  res.status(200).json({ message: 'Presentin found', data: presentin });
+});
+
+const bodySchema = z
+  .object({
+    recipientName: z.string().optional(),
+    title: z.string().optional(),
+    groupName: z.string().optional(),
+  })
+  .strict();
+
+router
+  .use(validateBody(bodySchema))
+  .use(isAuthenticated)
+  .patch(async (req, res) => {
+    const { presentinId } = req.query;
+    const { body } = req;
+
+    const uid = req.token?.uid;
+    const [, error] = await tryCatch(
+      updatePresentinById(presentinId as string, uid ?? '', body)
+    );
+
+    if (error) {
+      res.status(400).json({ message: 'Failed to update Presentin', error });
+      return;
+    }
+
+    res.status(200).json({ message: 'Presentin updated' });
+  });
+
+export default router.handler({
+  onError: (err, req, res) => {
+    console.error(err);
+    res.status(500).end('Server error!');
+  },
+  onNoMatch: (req, res) => {
+    res.status(405).json({ message: 'Invalid Request Method' });
+  },
+});
