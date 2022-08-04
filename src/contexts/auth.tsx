@@ -11,6 +11,7 @@ import {
   signInAnonymously,
   signInWithEmailLink,
   signOut as signOutFirebase,
+  User,
 } from 'firebase/auth';
 import {
   createContext,
@@ -21,10 +22,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { UserAuth } from '@/types/user';
 
 interface Context {
-  userAuth?: UserAuth | null;
+  userAuth?: User | null;
   sendEmailLink: (email: string, url?: string) => void;
   signInEmailLink: () => void;
   signInAnonymous: () => void;
@@ -38,11 +38,11 @@ const AuthContext = createContext({} as Context);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { addToast } = useToast();
-  const [userAuth, setUserAuth] = useState<UserAuth | null>();
+  const [userAuth, setUserAuth] = useState<User | null>();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUserAuth(currentUser as UserAuth | null);
+      setUserAuth(currentUser);
     });
 
     return () => unsubscribe();
