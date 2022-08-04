@@ -1,18 +1,22 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import ToastWrapper from '@/components/core/Toast/ToastWrapper';
-import { SWRConfig } from 'swr';
-import { swrConfig } from '@/helpers/api';
 import AuthProvider from '@/contexts/auth';
+import { Page } from '@/types/auth';
+import Auth from '@/components/core/Auth';
 
-const MyApp = ({ Component, pageProps }: AppProps) => (
-  <SWRConfig value={swrConfig}>
-    <ToastWrapper>
-      <AuthProvider>
+interface ExtendedAppProps extends AppProps {
+  Component: Page;
+}
+
+const MyApp = ({ Component, pageProps }: ExtendedAppProps) => (
+  <ToastWrapper>
+    <AuthProvider>
+      <Auth type={Component.auth}>
         <Component {...pageProps} />
-      </AuthProvider>
-    </ToastWrapper>
-  </SWRConfig>
+      </Auth>
+    </AuthProvider>
+  </ToastWrapper>
 );
 
 export default MyApp;
