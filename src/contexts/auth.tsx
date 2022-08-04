@@ -10,6 +10,7 @@ import {
   sendSignInLinkToEmail,
   signInAnonymously,
   signInWithEmailLink,
+  signOut as signOutFirebase,
 } from 'firebase/auth';
 import {
   createContext,
@@ -23,18 +24,21 @@ import {
 import { UserAuth } from '@/types/user';
 
 interface Context {
-  userAuth: UserAuth | null;
+  userAuth?: UserAuth | null;
   sendEmailLink: (email: string, url?: string) => void;
   signInEmailLink: () => void;
   signInAnonymous: () => void;
   linkAnonymousToEmailLink: (email: string) => void;
+  loggedIn: boolean;
+  loading: boolean;
+  signOut: () => void;
 }
 
 const AuthContext = createContext({} as Context);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { addToast } = useToast();
-  const [userAuth, setUserAuth] = useState<UserAuth | null>(null);
+  const [userAuth, setUserAuth] = useState<UserAuth | null>();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -124,6 +128,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     [addToast]
   );
 
+  const signOut = () => signOutFirebase(auth);
+
   const value = useMemo(
     () => ({
       userAuth,
@@ -131,6 +137,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       signInEmailLink,
       signInAnonymous,
       linkAnonymousToEmailLink,
+      loggedIn: !!userAuth,
+      loading: userAuth === undefined,
+      signOut,
     }),
     [
       signInEmailLink,
