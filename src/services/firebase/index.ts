@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
@@ -11,7 +11,7 @@ const credentials = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(credentials);
+const app = getApps().length === 0 ? initializeApp(credentials) : getApp();
 
 const auth = getAuth(app);
 const storage = getStorage(app);
