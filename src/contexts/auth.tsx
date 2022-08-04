@@ -3,9 +3,12 @@ import { auth } from '@/services/firebase';
 import { actionCodeSettings } from '@/services/firebase/auth';
 import tryCatch from '@/helpers/tryCatch';
 import {
+  EmailAuthProvider,
   isSignInWithEmailLink,
+  linkWithCredential,
   onAuthStateChanged,
   sendSignInLinkToEmail,
+  signInAnonymously,
   signInWithEmailLink,
 } from 'firebase/auth';
 import {
@@ -23,6 +26,8 @@ interface Context {
   userAuth: UserAuth | null;
   sendEmailLink: (email: string, url?: string) => void;
   signInEmailLink: () => void;
+  signInAnonymous: () => void;
+  linkAnonymousToEmailLink: (email: string) => void;
 }
 
 const AuthContext = createContext({} as Context);
@@ -85,9 +90,55 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     window.localStorage.removeItem('presentin-sign-in-email');
   }, [addToast]);
 
+  const signInAnonymous = useCallback(async () => {
+    const [token, error] = await tryCatch(signInAnonymously(auth));
+
+    if (!token || error) return;
+
+    setUserAuth(token.user as any);
+  }, []);
+
+  const linkAnonymousToEmailLink = useCallback(
+    async (email: string) => {
+      const credential = EmailAuthProvider.credentialWithLink(
+        email,
+        window.location.href
+      );
+
+      if (!auth.currentUser) {
+        addToast({ type: 'error', content: 'Falha ao linkar usuário' });
+        return;
+      }
+
+      const [token, error] = await tryCatch(
+        linkWithCredential(auth.currentUser, credential)
+      );
+
+      if (!token || error) {
+        addToast({ type: 'error', content: 'Falha ao linkar usuário' });
+        return;
+      }
+
+      setUserAuth(token.user as any);
+    },
+    [addToast]
+  );
+
   const value = useMemo(
-    () => ({ userAuth, sendEmailLink, signInEmailLink }),
-    [signInEmailLink, userAuth, sendEmailLink]
+    () => ({
+      userAuth,
+      sendEmailLink,
+      signInEmailLink,
+      signInAnonymous,
+      linkAnonymousToEmailLink,
+    }),
+    [
+      signInEmailLink,
+      userAuth,
+      sendEmailLink,
+      signInAnonymous,
+      linkAnonymousToEmailLink,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
