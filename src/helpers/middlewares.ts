@@ -60,3 +60,22 @@ export const validateBody =
 
     await next();
   };
+
+export const uidMatchesUserId = async (
+  req: NextApiRequestExtended,
+  res: NextApiResponse,
+  next: NextHandler
+) => {
+  const { userId } = req.query;
+  const { token } = req;
+
+  if (userId !== token?.uid) {
+    res.status(403).json({
+      message: 'Failed to access content',
+      error: 'You do not have permission',
+    });
+    return;
+  }
+
+  await next();
+};
