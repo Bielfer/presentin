@@ -1,3 +1,4 @@
+import paths from '@/constants/paths';
 import { useAuth } from '@/contexts/auth';
 import { AuthType } from '@/types/auth';
 import { useRouter } from 'next/router';
@@ -17,7 +18,7 @@ const Auth = ({ children, type = 'allow' }: Props) => {
   }
 
   if (!loggedIn && type === 'block') {
-    router.replace('/login');
+    router.replace(paths.login);
     return <Spinner page />;
   }
 
