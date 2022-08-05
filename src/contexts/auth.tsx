@@ -11,6 +11,7 @@ import {
   signInAnonymously,
   signInWithEmailLink,
   signOut as signOutFirebase,
+  updateProfile,
   User,
 } from 'firebase/auth';
 import {
@@ -27,7 +28,7 @@ interface Context {
   userAuth?: User | null;
   sendEmailLink: (email: string, url?: string) => void;
   signInEmailLink: () => void;
-  signInAnonymous: () => void;
+  signInAnonymous: (user: { displayName?: string; photoUrl?: string }) => void;
   linkAnonymousToEmailLink: (email: string) => void;
   loggedIn: boolean;
   loading: boolean;
@@ -94,13 +95,18 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     window.localStorage.removeItem('presentin-sign-in-email');
   }, [addToast]);
 
-  const signInAnonymous = useCallback(async () => {
-    const [token, error] = await tryCatch(signInAnonymously(auth));
+  const signInAnonymous = useCallback(
+    async (user?: { displayName?: string; photoUrl?: string }) => {
+      const [token, error] = await tryCatch(signInAnonymously(auth));
 
-    if (!token || error) return;
+      if (!token || error) return;
 
-    setUserAuth(token.user as any);
-  }, []);
+      if (user && auth.currentUser) updateProfile(auth.currentUser, user);
+
+      setUserAuth(token.user);
+    },
+    []
+  );
 
   const linkAnonymousToEmailLink = useCallback(
     async (email: string) => {
