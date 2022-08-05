@@ -1,10 +1,16 @@
+import { createPresentin } from '@/api/presentin';
 import hints from '@/constants/hints';
+import paths from '@/constants/paths';
 import validations from '@/constants/validations';
+import { useAuth } from '@/contexts/auth';
+import tryCatch from '@/helpers/tryCatch';
 import { Presentin } from '@/types/presentin';
 import clsx from 'clsx';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik } from 'formik';
+import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import Button from '../core/Button';
+import { useToast } from '../core/Toast';
 import FormikInput from './FormikInput';
 import FormikSwitch from './FormikSwitch';
 
@@ -14,6 +20,10 @@ interface Props {
 }
 
 const FormPresentin = ({ className, presentin }: Props) => {
+  const { loggedIn, signInAnonymous } = useAuth();
+  const { addToast } = useToast();
+  const router = useRouter();
+
   const isPresentinCreated = presentin?.id;
 
   const initialValues = {
@@ -21,15 +31,9 @@ const FormPresentin = ({ className, presentin }: Props) => {
     title: presentin?.title ?? '',
     collectCash: presentin?.collectCash ?? false,
     groupName: presentin?.groupName ?? '',
-    loggedIn: true,
-  };
-
-  const handleSubmit = (
-    values: typeof initialValues,
-    { setSubmitting }: FormikHelpers<typeof initialValues>
-  ) => {
-    setSubmitting(true);
-    alert(JSON.stringify(values));
+    loggedIn,
+    senderName: '',
+    senderEmail: '',
   };
 
   const validationSchema = Yup.object({
@@ -46,6 +50,32 @@ const FormPresentin = ({ className, presentin }: Props) => {
       then: Yup.string().required(validations.required),
     }),
   });
+
+  const handleSubmit = async (values: typeof initialValues) => {
+    if (!loggedIn) await signInAnonymous({ displayName: values.senderName });
+
+    const {
+      senderName,
+      senderEmail,
+      loggedIn: x,
+      ...toSendValues
+    } = { ...values };
+
+    const [presentinData, error] = await tryCatch(
+      createPresentin(toSendValues)
+    );
+
+    if (error || !presentinData) {
+      addToast({
+        type: 'error',
+        content:
+          'Não foi possível criar o seu presentin, tente recarregar a página',
+      });
+      return;
+    }
+
+    router.push(paths.presentinById(presentinData.id));
+  };
 
   return (
     <Formik

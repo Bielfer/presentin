@@ -2,9 +2,9 @@ import Container from '@/components/core/Container';
 import Header from '@/components/core/Header';
 import Text from '@/components/core/Text';
 import FormPresentin from '@/components/forms/FormPresentin';
-import type { NextPage } from 'next';
+import { Page } from '@/types/auth';
 
-const PresentinNew: NextPage = () => (
+const PresentinNew: Page = () => (
   <>
     <Header />
     <Container>
@@ -17,5 +17,7 @@ const PresentinNew: NextPage = () => (
     </Container>
   </>
 );
+
+PresentinNew.auth = 'wait';
 
 export default PresentinNew;
