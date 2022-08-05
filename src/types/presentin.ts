@@ -23,4 +23,5 @@ export interface PresentinMessage {
   donateCash: boolean;
   cashAmount: number;
   uid: string;
+  updatedAt: string;
 }
