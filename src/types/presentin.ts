@@ -16,6 +16,7 @@ export enum PresentinStatus {
 }
 
 export interface PresentinMessage {
+  id: string;
   senderName: string;
   message: string;
   image: string | null;
