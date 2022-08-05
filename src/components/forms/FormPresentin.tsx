@@ -1,4 +1,5 @@
 import { createPresentin } from '@/api/presentin';
+import { createUser } from '@/api/user';
 import hints from '@/constants/hints';
 import paths from '@/constants/paths';
 import validations from '@/constants/validations';
@@ -52,7 +53,10 @@ const FormPresentin = ({ className, presentin }: Props) => {
   });
 
   const handleSubmit = async (values: typeof initialValues) => {
-    if (!loggedIn) await signInAnonymous({ displayName: values.senderName });
+    if (!loggedIn) {
+      await signInAnonymous({ displayName: values.senderName });
+      await createUser({ name: values.senderName, email: values.senderEmail });
+    }
 
     const {
       senderName,
