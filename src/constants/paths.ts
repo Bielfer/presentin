@@ -4,7 +4,9 @@ const paths = {
   features: '/#features',
   createPresentin: '/presentin/new',
   login: '/login',
-  presentinMessage: (presentinId: string) => `${presentinId}/message`,
+  presentinById: (presentinId: string) => `/presentin/${presentinId}`,
+  presentinMessage: (presentinId: string) =>
+    `/presentin/${presentinId}/message`,
 };
 
 export default paths;
