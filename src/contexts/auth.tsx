@@ -26,10 +26,13 @@ import {
 
 interface Context {
   userAuth?: User | null;
-  sendEmailLink: (email: string, url?: string) => void;
-  signInEmailLink: () => void;
-  signInAnonymous: (user: { displayName?: string; photoUrl?: string }) => void;
-  linkAnonymousToEmailLink: (email: string) => void;
+  sendEmailLink: (email: string, url?: string) => Promise<void>;
+  signInEmailLink: () => Promise<void>;
+  signInAnonymous: (user: {
+    displayName?: string;
+    photoUrl?: string;
+  }) => Promise<void>;
+  linkAnonymousToEmailLink: (email: string) => Promise<void>;
   loggedIn: boolean;
   loading: boolean;
   signOut: () => void;
@@ -99,7 +102,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     async (user?: { displayName?: string; photoUrl?: string }) => {
       const [token, error] = await tryCatch(signInAnonymously(auth));
 
-      if (!token || error) return;
+      if (!token || error) {
+        addToast({
+          type: 'warning',
+          content: 'Houve um pequeno erro, clique de novo em criar',
+        });
+        return;
+      }
 
       if (user && auth.currentUser) updateProfile(auth.currentUser, user);
 
