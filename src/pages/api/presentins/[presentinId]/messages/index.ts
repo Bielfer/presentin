@@ -3,7 +3,11 @@ import { addPresentinMessage } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
 import type { NextApiResponse } from 'next';
 import { z } from 'zod';
-import { requestTimer, validateBody } from '@/helpers/middlewares';
+import {
+  isAuthenticated,
+  requestTimer,
+  validateBody,
+} from '@/helpers/middlewares';
 import { NextApiRequestExtended } from '@/types/api';
 import { createRouter } from 'next-connect';
 
@@ -18,35 +22,37 @@ const bodySchema = z
     image: z.string().nullable(),
     donateCash: z.boolean(),
     cashAmount: z.number().nullable(),
-    uid: z.string(),
   })
   .strict();
 
-router.use(validateBody(bodySchema)).post(async (req, res) => {
-  const { presentinId } = req.query;
-  const { body } = req;
+router
+  .use(validateBody(bodySchema))
+  .use(isAuthenticated)
+  .post(async (req, res) => {
+    const { presentinId } = req.query;
+    const { body, token } = req;
 
-  const [messageRef, error] = await tryCatch(
-    addPresentinMessage(presentinId as string, body)
-  );
+    const [messageRef, error] = await tryCatch(
+      addPresentinMessage(presentinId as string, { ...body, uid: token?.uid })
+    );
 
-  if (error) {
+    if (error) {
+      res
+        .status(404)
+        .json({ message: 'Failed to add message to presentin', error });
+      return;
+    }
+
+    const messageDoc = messageRef?.get();
+    const message = {
+      ...(await messageDoc)?.data(),
+      id: (await messageDoc)?.id,
+    };
+
     res
-      .status(404)
-      .json({ message: 'Failed to add message to presentin', error });
-    return;
-  }
-
-  const messageDoc = messageRef?.get();
-  const message = {
-    ...(await messageDoc)?.data(),
-    id: (await messageDoc)?.id,
-  };
-
-  res
-    .status(200)
-    .json({ message: 'Message added to presentin', data: message });
-});
+      .status(200)
+      .json({ message: 'Message added to presentin', data: message });
+  });
 
 export default router.handler({
   onError: (err, req, res) => {
