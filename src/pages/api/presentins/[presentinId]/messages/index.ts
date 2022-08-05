@@ -1,5 +1,5 @@
 /* eslint no-console:off */
-import { addPresentinMessage } from '@/db/presentin';
+import { addPresentinMessage, getPresentinMessages } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
 import type { NextApiResponse } from 'next';
 import { z } from 'zod';
@@ -10,10 +10,39 @@ import {
 } from '@/helpers/middlewares';
 import { NextApiRequestExtended } from '@/types/api';
 import { createRouter } from 'next-connect';
+import { PresentinMessage } from '@/types/presentin';
 
 const router = createRouter<NextApiRequestExtended, NextApiResponse>().use(
   requestTimer
 );
+
+router.get(async (req, res) => {
+  const { presentinId } = req.query;
+
+  const [snapshot, error] = await tryCatch(
+    getPresentinMessages(presentinId as string)
+  );
+
+  const presentinMessages: PresentinMessage[] = [];
+
+  snapshot?.forEach((doc) => {
+    presentinMessages.push({
+      ...(doc.data() as PresentinMessage),
+      id: doc.id,
+      updatedAt: doc.data().updatedAt.toDate(),
+    });
+  });
+
+  if (error) {
+    res.status(400).json({ message: 'Failed to get messages', error });
+    return;
+  }
+
+  res.status(200).json({
+    message: 'Successfully got presentin messages',
+    data: presentinMessages,
+  });
+});
 
 const bodySchema = z
   .object({
