@@ -6,6 +6,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   password?: boolean;
   error?: string;
   hint?: string;
+  help?: string;
 }
 
 const Input: FC<Props> = ({
@@ -17,6 +18,7 @@ const Input: FC<Props> = ({
   error,
   name,
   hint,
+  help,
   ...props
 }) => (
   <InputLayout
@@ -25,6 +27,7 @@ const Input: FC<Props> = ({
     error={error}
     hint={hint}
     label={label}
+    help={help}
     shadow
   >
     <input

@@ -11,6 +11,7 @@ interface Props {
   name?: string;
   children: ReactNode;
   shadow?: boolean;
+  help?: string;
 }
 
 const InputLayout = ({
@@ -21,6 +22,7 @@ const InputLayout = ({
   name,
   children,
   shadow,
+  help,
 }: Props) => (
   <div className={className}>
     {label && (
@@ -51,6 +53,7 @@ const InputLayout = ({
         {error}
       </p>
     )}
+    {!!help && <p className="mt-2 text-sm text-slate-500">{help}</p>}
   </div>
 );
 

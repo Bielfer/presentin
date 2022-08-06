@@ -15,6 +15,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   password?: boolean;
   formatter?: string;
   hint?: string;
+  help?: string;
 }
 
 const FormikInput: FC<Props> = ({
@@ -24,6 +25,7 @@ const FormikInput: FC<Props> = ({
   formatter,
   className,
   hint,
+  help,
   ...props
 }) => {
   const [{ value }, { error }, { setValue }] = useField(name);
@@ -105,6 +107,7 @@ const FormikInput: FC<Props> = ({
       className={className}
       error={error}
       hint={hint}
+      help={help}
       {...props}
     />
   );
