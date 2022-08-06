@@ -1,7 +1,7 @@
 /* eslint no-console:off */
-import { addPresentin } from '@/db/presentin';
+import { addPresentin, getPresentins } from '@/db/presentin';
 import tryCatch from '@/helpers/tryCatch';
-import { PresentinStatus } from '@/types/presentin';
+import { Presentin, PresentinStatus } from '@/types/presentin';
 import { z } from 'zod';
 import {
   isAuthenticated,
@@ -15,6 +15,33 @@ import { createRouter } from 'next-connect';
 const router = createRouter<NextApiRequestExtended, NextApiResponse>().use(
   requestTimer
 );
+
+router.use(isAuthenticated).get(async (req, res) => {
+  const { token } = req;
+
+  const [data, error] = await tryCatch(getPresentins(token?.uid ?? ''));
+
+  if (error) {
+    res.status(400).json({ message: 'Failed to get presentins', error });
+    return;
+  }
+
+  const presentins: Presentin[] = [];
+
+  data?.forEach((snapshot) => {
+    const presentin = { ...snapshot.data() };
+
+    presentins.push({
+      ...(presentin as any),
+      updatedAt: presentin.updatedAt.toDate(),
+      id: snapshot.id,
+    });
+  });
+
+  res
+    .status(200)
+    .json({ message: 'Successfully returned presentins', data: presentins });
+});
 
 const bodySchema = z
   .object({

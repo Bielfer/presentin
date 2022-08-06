@@ -1,6 +1,9 @@
 import { adminFirestore, getServerTimestamp } from '@/services/firebase/admin';
 import { Presentin, PresentinMessage } from '@/types/presentin';
 
+export const getPresentins = (uid: string) =>
+  adminFirestore.collection('presentins').where('uid', '==', uid).get();
+
 export const addPresentin = (data: Presentin) =>
   adminFirestore.collection('presentins').add({
     ...data,
