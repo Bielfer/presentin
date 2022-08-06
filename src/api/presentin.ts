@@ -15,7 +15,7 @@ const createPresentinMessage = (
   body: Record<string, any>
 ) =>
   apiWithToken
-    .post(`/presentins/${presentinId}/message`, body)
+    .post(`/presentins/${presentinId}/messages`, body)
     .then((res) => res.data);
 
 export { createPresentin, editPresentin, createPresentinMessage };
