@@ -14,12 +14,13 @@ const Auth = ({ children, type = 'allow' }: Props) => {
   const { loggedIn, loading } = useAuth();
 
   if (loading && type === 'wait') {
-    return <Spinner page />;
+    return <Spinner page size="xl" />;
   }
 
-  if (!loggedIn && !loading && type === 'block') {
+  if (!loggedIn && type === 'block') {
+    if (loading) return <Spinner page size="xl" />;
     router.replace(paths.login);
-    return <Spinner page />;
+    return <Spinner page size="xl" />;
   }
 
   return children;
