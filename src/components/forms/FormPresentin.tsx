@@ -1,4 +1,4 @@
-import { createPresentin } from '@/api/presentin';
+import { createPresentin, editPresentin } from '@/api/presentin';
 import { createUser } from '@/api/user';
 import hints from '@/constants/hints';
 import paths from '@/constants/paths';
@@ -17,10 +17,11 @@ import FormikSwitch from './FormikSwitch';
 
 interface Props {
   className?: string;
-  presentin?: Partial<Presentin>;
+  presentin?: Presentin;
+  onClose?: () => void;
 }
 
-const FormPresentin = ({ className, presentin }: Props) => {
+const FormPresentin = ({ className, presentin, onClose }: Props) => {
   const { loggedIn, signInAnonymous } = useAuth();
   const { addToast } = useToast();
   const router = useRouter();
@@ -65,20 +66,36 @@ const FormPresentin = ({ className, presentin }: Props) => {
       ...toSendValues
     } = { ...values };
 
-    const [presentinData, error] = await tryCatch(
-      createPresentin(toSendValues)
-    );
+    if (!presentin) {
+      const [presentinData, error] = await tryCatch(
+        createPresentin(toSendValues)
+      );
 
-    if (error || !presentinData) {
-      addToast({
-        type: 'error',
-        content:
-          'Não foi possível criar o seu presentin, tente recarregar a página',
-      });
+      if (error || !presentinData) {
+        addToast({
+          type: 'error',
+          content:
+            'Não foi possível criar o seu presentin, tente recarregar a página',
+        });
+        return;
+      }
+
+      router.push(paths.presentinById(presentinData.id));
       return;
     }
 
-    router.push(paths.presentinById(presentinData.id));
+    const { collectCash, ...editValues } = toSendValues;
+    const [, error] = await tryCatch(editPresentin(presentin.id, editValues));
+
+    if (error) {
+      addToast({
+        type: 'error',
+        content:
+          'Não foi possível atualizar o seu presentin, tente recarregar a página',
+      });
+    }
+
+    if (onClose) onClose();
   };
 
   return (
