@@ -17,7 +17,7 @@ const Auth = ({ children, type = 'allow' }: Props) => {
     return <Spinner page />;
   }
 
-  if (!loggedIn && type === 'block') {
+  if (!loggedIn && !loading && type === 'block') {
     router.replace(paths.login);
     return <Spinner page />;
   }
