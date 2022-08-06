@@ -12,6 +12,7 @@ import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import Button from '../core/Button';
+import Card from '../core/Card';
 import { useToast } from '../core/Toast';
 import FormikFile from './FormikFile';
 import FormikInput from './FormikInput';
@@ -135,6 +136,13 @@ const FormPresentinMessage = ({ className }: Props) => {
           >
             Escolher Foto
           </FormikFile>
+
+          {!!values.image && (
+            <Card className="flex justify-center">
+              <img className="w-1/2" src={URL.createObjectURL(values.image)} />
+            </Card>
+          )}
+
           <FormikSwitch
             name="donateCash"
             label="Vai presentear seu amigo com alguma quantia?"
