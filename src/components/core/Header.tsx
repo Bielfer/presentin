@@ -6,6 +6,7 @@ import ButtonLink from '@/components/core/ButtonLink';
 import Container from '@/components/core/Container';
 import paths from '@/constants/paths';
 import { useAuth } from '@/contexts/auth';
+import { useRouter } from 'next/router';
 import MyLink from './MyLink';
 
 const links = [
@@ -102,6 +103,7 @@ const MobileNavigation = () => {
   );
 };
 const Header = () => {
+  const router = useRouter();
   const { loggedIn } = useAuth();
 
   return (
@@ -120,14 +122,17 @@ const Header = () => {
               </li>
             ))}
 
-            <li className="ml-auto hidden md:block">
-              <ButtonLink
-                href={loggedIn ? paths.dashboard : paths.login}
-                variant="secondary"
-              >
-                {loggedIn ? 'Ver Presentins' : 'Fazer Login'}
-              </ButtonLink>
-            </li>
+            {router.pathname !== paths.dashboard && (
+              <li className="ml-auto hidden md:block">
+                <ButtonLink
+                  href={loggedIn ? paths.dashboard : paths.login}
+                  variant="secondary"
+                >
+                  {loggedIn ? 'Ver Presentins' : 'Fazer Login'}
+                </ButtonLink>
+              </li>
+            )}
+
             <li className="ml-auto -mr-1 md:hidden">
               <MobileNavigation />
             </li>
