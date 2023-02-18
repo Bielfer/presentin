@@ -4,8 +4,9 @@ import Header from '@/components/core/Header';
 import LoadingWrapper from '@/components/core/LoadingWrapper';
 import MyLink from '@/components/core/MyLink';
 import Table from '@/components/core/Table';
+import Tabs from '@/components/core/Tabs';
 import Text from '@/components/core/Text';
-import paths from '@/constants/paths';
+import paths, { pathsLoggedIn } from '@/constants/paths';
 import usePresentins from '@/data/usePresentins';
 import { Page } from '@/types/auth';
 
@@ -16,8 +17,9 @@ const Dashboard: Page = () => {
     <>
       <Header />
       <Container>
-        <div className="flex items-center justify-between">
-          <Text h3>Seus Presentins</Text>
+        <Tabs tabs={pathsLoggedIn} />
+        <div className="flex items-center justify-between pt-6">
+          <Text h1>Seus Presentins</Text>
           <ButtonLink href={paths.createPresentin} variant="primary">
             Criar
           </ButtonLink>
